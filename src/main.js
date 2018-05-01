@@ -1,5 +1,8 @@
 // import all our dependencies
 import * as THREE from 'three'
+import * as PointerLockControls from 'three-pointerlock'
+
+import Player from './player.js'
 
 // SCENE
 let scene = new THREE.Scene()
@@ -23,6 +26,7 @@ let color = new THREE.Color(0xCCFFFF)
 
 scene.background = color
 
+
 // PLANE
 import grassPath from './textures/grass_texture.jpg'
 console.log(grassPath)
@@ -43,7 +47,19 @@ let pointLight = new THREE.PointLight( 0xff0000, 1, 100 )
 pointLight.position.set(0, 50, 50)
 scene.add(pointLight)
 
+
+// PLAYER
+// test placing our player
+const player = new Player
+scene.add(player.mesh)
+
+
 // CONTROLS
+
+// Pointerlock controls
+// let pointerLockControls = new PointerLockControls(camera)
+
+// input keys
 let keys = {
   left: false,
   right: false,
@@ -83,10 +99,6 @@ document.addEventListener('keyup', (event) => {
   }
 })
 
-// Pointerlock controls -- undocumented in Threejsdocs 
-// https://github.com/mrdoob/three.js/blob/master/examples/js/controls/PointerLockControls.js
-// let orbitControl = new THREE.PointerLockControls(camera)
-
 //GAMELOOP
 function animate () {
 
@@ -105,6 +117,10 @@ function animate () {
   if (keys.back) {
     camera.position.z += 0.1
   }
+
+  // Flag that we should update our pointerlock control
+  // pointerLockControls.update(1)
+
 
   // LOGGING
   // console.log(camera.position.z, camera.position.x)
