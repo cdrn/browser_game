@@ -25,7 +25,7 @@ scene.background = color
 
 // PLANE
 import grassPath from './textures/grass_texture.jpg'
-console.log(grassImg)
+console.log(grassPath)
 let planeTexture = THREE.ImageUtils.loadTexture(grassPath)
 let planeGeo = new THREE.PlaneGeometry(1000, 1000, 100, 100)
 let planeMat = new THREE.MeshLambertMaterial({ color: 0xffffff, side:THREE.DoubleSide, wireframe: false, map: planeTexture})
