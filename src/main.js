@@ -24,10 +24,12 @@ let color = new THREE.Color(0xCCFFFF)
 scene.background = color
 
 // PLANE
-let plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(1000, 1000, 100, 100),
-  new THREE.MeshLambertMaterial({ color: 0xffffff, side:THREE.DoubleSide, wireframe: false })
-)
+import grassPath from './textures/grass_texture.jpg'
+console.log(grassImg)
+let planeTexture = THREE.ImageUtils.loadTexture(grassPath)
+let planeGeo = new THREE.PlaneGeometry(1000, 1000, 100, 100)
+let planeMat = new THREE.MeshLambertMaterial({ color: 0xffffff, side:THREE.DoubleSide, wireframe: false, map: planeTexture})
+let plane = new THREE.Mesh(planeGeo, planeMat)
 plane.rotation.x = Math.PI / 2
 scene.add(plane)
 
@@ -83,12 +85,12 @@ document.addEventListener('keyup', (event) => {
 
 // Pointerlock controls -- undocumented in Threejsdocs 
 // https://github.com/mrdoob/three.js/blob/master/examples/js/controls/PointerLockControls.js
-let orbitControl = new THREE.PointerLockControls(camera)
+// let orbitControl = new THREE.PointerLockControls(camera)
 
 //GAMELOOP
 function animate () {
 
-  controls.update()
+  // controls.update()
 
   //Register player movement
   if (keys.left) {
@@ -103,7 +105,10 @@ function animate () {
   if (keys.back) {
     camera.position.z += 0.1
   }
-  console.log(camera.position.z, camera.position.x)
+
+  // LOGGING
+  // console.log(camera.position.z, camera.position.x)
+  
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
 }
