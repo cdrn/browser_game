@@ -1,6 +1,6 @@
 // import all our dependencies
 import * as THREE from 'three'
-import * as PointerLockControls from 'three-pointerlock'
+import './main.css' // add css dependency for webpack
 
 import Player from './player.js'
 
@@ -16,7 +16,6 @@ let renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-
 // SKYBOX
 let color = new THREE.Color(0xCCFFFF)
 // Load urls 
@@ -29,9 +28,14 @@ scene.background = color
 
 // PLANE
 import grassPath from './textures/grass_texture.jpg'
-console.log(grassPath)
-let planeTexture = THREE.ImageUtils.loadTexture(grassPath)
-let planeGeo = new THREE.PlaneGeometry(1000, 1000, 100, 100)
+
+let planeTexture = new THREE.TextureLoader().load(grassPath)
+planeTexture.wrapS = THREE.RepeatWrapping
+planeTexture.wrapT = THREE.RepeatWrapping
+planeTexture.offset.set( 0, 0 )
+planeTexture.repeat.set( 100, 100 )
+
+let planeGeo = new THREE.PlaneGeometry(1000, 1000, 1000, 1000)
 let planeMat = new THREE.MeshLambertMaterial({ color: 0xffffff, side:THREE.DoubleSide, wireframe: false, map: planeTexture})
 let plane = new THREE.Mesh(planeGeo, planeMat)
 plane.rotation.x = Math.PI / 2
@@ -51,13 +55,12 @@ scene.add(pointLight)
 // PLAYER
 // test placing our player
 const player = new Player
-scene.add(player.mesh)
+player.playerMesh.position.set(-10, 0, 0)
+scene.add(player.playerMesh)
 
 
 // CONTROLS
-
-// Pointerlock controls
-// let pointerLockControls = new PointerLockControls(camera)
+// Pointer lock controls
 
 // input keys
 let keys = {
@@ -117,9 +120,6 @@ function animate () {
   if (keys.back) {
     camera.position.z += 0.1
   }
-
-  // Flag that we should update our pointerlock control
-  // pointerLockControls.update(1)
 
 
   // LOGGING
