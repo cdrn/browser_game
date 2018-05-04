@@ -20,6 +20,7 @@ export default class {
     this.playerMat = new THREE.MeshLambertMaterial({ color: 0xffffff })
     this.playerGeo = new THREE.CylinderBufferGeometry(1 * this.playerSize, 1 * this.playerSize, 4 * this.playerSize, 20)
     this.playerMesh = new THREE.Mesh(this.playerGeo, this.playerMat)
+
   }
 
 }

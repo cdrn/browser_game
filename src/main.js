@@ -1,5 +1,7 @@
 // import all our dependencies
 import * as THREE from 'three'
+
+import PointerLockControls from './PointerLockControls'
 import './main.css' // add css dependency for webpack
 
 import Player from './player.js'
@@ -9,7 +11,7 @@ let scene = new THREE.Scene()
 
 /*args: FOV(degrees), aspect ratio, near clipping plane, far clipping plane (point which rendering ceases) */
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 3, -1)
+camera.position.set(0, 3, 10)
 
 // Set up our WebGL renderer and append it to the DOM
 let renderer = new THREE.WebGLRenderer()
@@ -47,7 +49,7 @@ let ambientLight = new THREE.AmbientLight(0x404040)
 ambientLight.position.set(50, 50, 50)
 scene.add(ambientLight)
 
-let pointLight = new THREE.PointLight( 0xff0000, 1, 100 )
+let pointLight = new THREE.PointLight( 0xffffff, 1, 100 )
 pointLight.position.set(0, 50, 50)
 scene.add(pointLight)
 
@@ -61,6 +63,39 @@ scene.add(player.playerMesh)
 
 // CONTROLS
 // Pointer lock controls
+// http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+if (havePointerLock) {
+  let element = document.body;
+  let pointerlockchange = function (event) {
+    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+        controls.enabled = true;
+    } else {
+        controls.enabled = false;
+    }
+  };
+  let pointerlockerror = function (event) {
+
+  };
+  // Hook pointer lock state change events
+  document.addEventListener('pointerlockchange', pointerlockchange, false);
+  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+  document.addEventListener('pointerlockerror', pointerlockerror, false);
+  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+  document.addEventListener('click', function (event) {
+      // Ask the browser to lock the pointer
+      element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+      element.requestPointerLock()
+    }, false)
+} else {
+}
+const controls = new PointerLockControls(camera)
+scene.add(controls.getObject())
+
+const clock = new THREE.Clock( true )
+
 
 // input keys
 let keys = {
@@ -105,22 +140,21 @@ document.addEventListener('keyup', (event) => {
 //GAMELOOP
 function animate () {
 
-  // controls.update()
-
   //Register player movement
   if (keys.left) {
-    camera.position.x -= 0.1
+    camera.position.x -= 0.2
   }
   if (keys.right) {
-    camera.position.x += 0.1
+    camera.position.x += 0.2
   }
   if (keys.forward) {
-    camera.position.z -= 0.1
+    camera.position.z -= 0.2
   }
   if (keys.back) {
     camera.position.z += 0.1
   }
 
+  // controls.update()
 
   // LOGGING
   // console.log(camera.position.z, camera.position.x)
