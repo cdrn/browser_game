@@ -3,18 +3,22 @@ import * as THREE from 'three'
 
 import PointerLockControls from './PointerLockControls'
 import './main.css' // add css dependency for webpack
-
 import Player from './player.js'
 
+
+// Declare our important variables
+let scene;
+let camera;
+let renderer;
+
 // SCENE
-let scene = new THREE.Scene()
+scene = new THREE.Scene()
 
 /*args: FOV(degrees), aspect ratio, near clipping plane, far clipping plane (point which rendering ceases) */
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 3, 10)
+camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
 // Set up our WebGL renderer and append it to the DOM
-let renderer = new THREE.WebGLRenderer()
+renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
@@ -35,7 +39,7 @@ let planeTexture = new THREE.TextureLoader().load(grassPath)
 planeTexture.wrapS = THREE.RepeatWrapping
 planeTexture.wrapT = THREE.RepeatWrapping
 planeTexture.offset.set( 0, 0 )
-planeTexture.repeat.set( 100, 100 )
+planeTexture.repeat.set( 1, 1 )
 
 let planeGeo = new THREE.PlaneGeometry(1000, 1000, 1000, 1000)
 let planeMat = new THREE.MeshLambertMaterial({ color: 0xffffff, side:THREE.DoubleSide, wireframe: false, map: planeTexture})
@@ -69,14 +73,14 @@ if (havePointerLock) {
   let element = document.body;
   let pointerlockchange = function (event) {
     if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-        controls.enabled = true;
+        controls.enabled = true
     } else {
-        controls.enabled = false;
+        controls.enabled = false
     }
-  };
+  }
   let pointerlockerror = function (event) {
 
-  };
+  }
   // Hook pointer lock state change events
   document.addEventListener('pointerlockchange', pointerlockchange, false);
   document.addEventListener('mozpointerlockchange', pointerlockchange, false);
@@ -91,11 +95,12 @@ if (havePointerLock) {
     }, false)
 } else {
 }
+
+// Add our pointerlock controls to the scene
 const controls = new PointerLockControls(camera)
 scene.add(controls.getObject())
 
-const clock = new THREE.Clock( true )
-
+camera.position.set(0, 3, 10)
 
 // input keys
 let keys = {
@@ -137,27 +142,33 @@ document.addEventListener('keyup', (event) => {
   }
 })
 
+
+//COLLISION
+let raycaster = new THREE.Raycaster()
+
 //GAMELOOP
 function animate () {
 
   //Register player movement
   if (keys.left) {
-    camera.position.x -= 0.2
+    camera.position.x -= 1
   }
   if (keys.right) {
-    camera.position.x += 0.2
+    camera.position.x += 1
   }
   if (keys.forward) {
-    camera.position.z -= 0.2
   }
   if (keys.back) {
-    camera.position.z += 0.1
   }
 
-  // controls.update()
+  player.playerMesh.position.set(camera.position)  // Set playermodel to camera pos
 
   // LOGGING
   // console.log(camera.position.z, camera.position.x)
+
+  // COLLISION
+  // Floor detection
+  // raycaster.set(player.playerMesh.position)
   
   requestAnimationFrame(animate)
   renderer.render(scene, camera)

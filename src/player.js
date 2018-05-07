@@ -10,17 +10,25 @@ import * as THREE from 'three'
 
 export default class {
 
-  constructor() {
+  constructor () {
     // PROPERTIES
     this.playerSpeed = 1
     this.playerSize = 1 // Scalar value of player size
+    this.playerHeight = 1.8
 
     // MESH
     this.playerTex = null
     this.playerMat = new THREE.MeshLambertMaterial({ color: 0xffffff })
-    this.playerGeo = new THREE.CylinderBufferGeometry(1 * this.playerSize, 1 * this.playerSize, 4 * this.playerSize, 20)
+    this.playerGeo = new THREE.CylinderBufferGeometry(1 * this.playerSize, 1 * this.playerSize, this.playerHeight * this.playerSize, 20)
     this.playerMesh = new THREE.Mesh(this.playerGeo, this.playerMat)
-
   }
+
+  get getPosition () {
+    return this.playerMesh.position()
+  }
+  setPosition (x, y, z) {
+    this.playerMesh.position.set(x, y, z)
+  }
+
 
 }

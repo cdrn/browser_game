@@ -13,7 +13,7 @@ export default function ( camera ) {
 	pitchObject.add( camera );
 
 	var yawObject = new THREE.Object3D();
-	yawObject.position.y = 10;
+	yawObject.position.y = 3;
 	yawObject.add( pitchObject );
 
 	var PI_2 = Math.PI / 2;
@@ -31,6 +31,10 @@ export default function ( camera ) {
 		pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
 
 	};
+
+	this.setPosition = function (position) {
+		pitchObject.position.set(position)
+	}
 
 	this.dispose = function () {
 
